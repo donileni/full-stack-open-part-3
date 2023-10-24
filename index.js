@@ -10,6 +10,10 @@ morgan.token("tokenData", (req, res) => {
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :tokenData'))
 
+const cors = require('cors')
+
+app.use(cors())
+
 let persons = [
     { 
         "id": 1,
