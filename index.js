@@ -57,14 +57,15 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-
-    if (person) {
-        response.json(person)
-    } else {
+    const person_id = Number(request.params.id)
+    Person.find({ id: person_id }).then(person => {
+      if (Object.keys(person).length === 0) {
         response.status(404).end()
-    }
+      }
+      else {
+        response.json(person)
+      }
+    })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
