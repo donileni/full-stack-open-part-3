@@ -44,19 +44,20 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
-    Person.find({ id: request.params.id }).then(person => {
-      if (person.length === 0) {
+    Person.findById(request.params.id).then(person => {
+      if (person) {
+        response.json(person)
         response.status(404).end()
       }
       else {
-        response.json(person)
+        response.status(404).end()
       }
     })
     .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    Person.findOneAndDelete({id: request.params.id}).then(result => {
+    Person.findByIdAndDelete(request.params.id).then(result => {
       response.status(204).end()
     })
     .catch(error => next(error))
@@ -94,10 +95,10 @@ app.put('/api/persons/:id', (request, response, next) => {
   const person = {
     "name": body.name,
     "number": body.number,
-    "id": request.params.id,
+    "id": body.id,
   }
 
-  Person.findOneAndUpdate({id: request.params.id}, person, {new: true}).then(updatedPerson => {
+  Person.findByIdAndUpdate(request.params.id, person, {new: true}).then(updatedPerson => {
     response.json(updatedPerson)
   })
   .catch(error => next(error))
