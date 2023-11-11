@@ -34,11 +34,13 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    const entriesText = `Phonebook has info for ${persons.length} people`
+
+  Person.find().count().then(count => {
+    const entriesText = `Phonebook has info for ${count} people`
     const now = new Date().toString()
     const combinedText = `<p>${entriesText}</p><p>${now}</p>`
-
     response.send(combinedText)
+  })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -76,9 +78,9 @@ app.post('/api/persons/', (request, response) => {
   const id = generateId()
 
   const person = new Person({
-    "id": id,
     "name": body.name,
     "number": body.number,
+    "id": id,
   }) 
     
   person.save().then(savedPerson => {
@@ -90,9 +92,9 @@ app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
 
   const person = {
-    "id": request.params.id,
     "name": body.name,
     "number": body.number,
+    "id": request.params.id,
   }
 
   Person.findOneAndUpdate({id: request.params.id}, person, {new: true}).then(updatedPerson => {
