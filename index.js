@@ -18,29 +18,6 @@ app.use(cors())
 
 app.use(express.static('dist'))
 
-let persons = [
-    { 
-        "id": 1,
-        "name": "Arto Hellas", 
-        "number": "040-123456"
-      },
-      { 
-        "id": 2,
-        "name": "Ada Lovelace", 
-        "number": "39-44-5323523"
-      },
-      { 
-        "id": 3,
-        "name": "Dan Abramov", 
-        "number": "12-43-234345"
-      },
-      { 
-        "id": 4,
-        "name": "Mary Poppendieck", 
-        "number": "39-23-6423122"
-      }
-]
-
 
 app.get('/api/persons', (request, response) => {
   Person.find({}).then(persons => {
@@ -88,25 +65,17 @@ app.post('/api/persons/', (request, response) => {
     })
   }
 
-  const names = persons.map(person => person.name)
-
-  if(names.includes(body.name)) {
-    return response.status(400).json({
-      error: "name must be unique"
-    })
-  }
-
   const id = generateId()
 
-  const person = {
+  const person = new Person({
     "id": id,
     "name": body.name,
     "number": body.number,
-  }
-
-  persons = persons.concat(person)
-
-  response.json(person)
+  }) 
+    
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
 const PORT = process.env.PORT
