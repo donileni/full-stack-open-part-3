@@ -2,6 +2,6 @@ POST https://hidden-smoke-9518.fly.dev/api/persons
 Content-Type: application/json
 
 {
-    "name": "David",
+    "name": "an",
     "number": 123
 }
